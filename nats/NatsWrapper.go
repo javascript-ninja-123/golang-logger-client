@@ -19,6 +19,10 @@ type NatsWrapper struct {
 	SC stan.Conn
 }
 
+func NewNatsWrapper() INatsWrapper {
+	return &NatsWrapper{}
+}
+
 func (s *NatsWrapper) Connect(productionID string, clusterID string, URL string) error {
 	sc, err := stan.Connect(productionID, clusterID, stan.NatsURL(URL))
 	if err != nil {
