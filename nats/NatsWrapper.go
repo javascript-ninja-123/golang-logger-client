@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"time"
 
-	"github.com/javascript-ninja-123/golang-logger-client/domain"
+	"github.com/javascript-ninja-123/log-client/domain"
 	"github.com/nats-io/stan.go"
 )
 
@@ -40,11 +40,11 @@ func (s *NatsWrapper) Publish(subject NatsEventType, data interface{}) error {
 	return s.SC.Publish(ParseNatsEventType(subject), bytes)
 }
 
-func (s *NatsWrapper) Log(name string, message string, level domain.Level)  error {
+func (s *NatsWrapper) Log(name string, message string, level domain.Level) error {
 	return s.Publish(LOGGING, domain.Log{Name: name, Date: time.Now(), Message: message, Level: level})
 }
 
-func (s *NatsWrapper) Subscribe(subject NatsEventType, queueName string, DurableKey string, callback func(data []byte) error)  {
+func (s *NatsWrapper) Subscribe(subject NatsEventType, queueName string, DurableKey string, callback func(data []byte) error) {
 	s.SC.QueueSubscribe(ParseNatsEventType(subject), queueName, func(msg *stan.Msg) {
 		bytes := msg.Data
 		err := callback(bytes)
@@ -55,6 +55,6 @@ func (s *NatsWrapper) Subscribe(subject NatsEventType, queueName string, Durable
 	}, stan.DurableName(DurableKey), stan.SetManualAckMode())
 }
 
-func (s *NatsWrapper) Close(){
+func (s *NatsWrapper) Close() {
 	s.SC.Close()
 }
